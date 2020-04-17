@@ -4,7 +4,7 @@
   "private": false,
   "license": "MPL-2.0",
   "repository": "https://github.com/OpenEnergyDashboard/OED",
-  "scripts": {
+  "scripts": { 
     "start": "node ./src/bin/www",
     "start:dev": "./node_modules/.bin/nodemon --inspect=0.0.0.0 ./src/bin/www",
     "webpack:dev": "webpack -d --watch --color --progress",
