@@ -51,11 +51,16 @@ function findMaxVersion(list) {
 		if (currentVersion === toVersion) {
 			terminateReadline(`Cannot migrate. You already have the highest version ${currentVersion}`);
 		} else {
+<<<<<<< HEAD
 			const result = await migrateAll(toVersion, migrationList, conn);
 			if (result !== undefined) {
+=======
+			try {
+				await migrateAll(toVersion, migrationList);
+>>>>>>> noraObv/obvius
 				terminateReadline('Migration successful');
-			} else {
-				terminateReadline('Migration failed');
+			} catch (err) {
+				terminateReadline(`Migration failed: ${err}`);
 			}
 		}
 	} catch (err) {
