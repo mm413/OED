@@ -80,25 +80,6 @@ async function createSchema(conn) {
 	const Baseline = require('./Baseline');
 
 	/* eslint-enable global-require */
-<<<<<<< HEAD
-	await Meter.createMeterTypesEnum(conn);
-	await Meter.createTable(conn);
-	await Reading.createTable(conn);
-	await Reading.createCompressedReadingsFunction(conn);
-	await Reading.createCompressedGroupsReadingsFunction(conn);
-	await Reading.createBarchartReadingsFunction(conn);
-	await Reading.createCompressedGroupsBarchartReadingsFunction(conn);
-	await User.createTable(conn);
-	await Preferences.createTable(conn);
-	await Group.createTables(conn);
-	await Migration.createTable(conn);
-	await LogEmail.createTable(conn);
-	await conn.none(sqlFile('reading/create_function_get_compressed_readings.sql'));
-	await Reading.createCompressedReadingsMaterializedViews(conn);
-	await Reading.createCompareReadingsFunction(conn);
-	await Baseline.createTable(conn);
-	await conn.none(sqlFile('baseline/create_function_get_average_reading.sql'));
-=======
 	await Meter.createMeterTypesEnum();
 	await Meter.createTable();
 	await Reading.createTable();
@@ -116,7 +97,6 @@ async function createSchema(conn) {
 	await getDB().none(sqlFile('baseline/create_function_get_average_reading.sql'));
 	await db.none(sqlFile('reading/create_function_get_compressed_readings.sql'));
 	await Configfile.createTable();
->>>>>>> noraObv/obvius
 }
 
 module.exports = {
