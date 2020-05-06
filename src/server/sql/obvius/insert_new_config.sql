@@ -5,4 +5,5 @@
 INSERT INTO obvius_configs(serial_id, modbus_id, created, hash, contents, processed)
 	VALUES (${serialId}, ${modbusId}, ${created}, ${hash}, ${contents}, ${processed})
 	RETURNING id;
-/* TODO : add in extra columns for (at least) name, and maybe point name/ units
+/* TODO : add in extra columns for name and however an array of strings 
+would be stored (for meters) */
