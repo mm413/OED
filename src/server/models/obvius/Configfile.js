@@ -3,8 +3,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 const database = require('../database');
-
+const { log } = require('../../log');
 const sqlFile = database.sqlFile;
+const ini = require("ini"); 
+const fs = require('fs'); //may be able to remove this when implemented.
+
 
 class Configfile {
 	/**
@@ -25,6 +28,7 @@ class Configfile {
 		this.hash = hash;
 		this.contents = contents;
 		this.processed = processed;
+		this.points = parsecontents();
 	}
 
 	/**
@@ -86,7 +90,25 @@ class Configfile {
 	async insert(conn) {
 		const configfile = this;
 		if (this.id !== undefined) {
+			// this may need to be modified in the case where a meter is being updated.
 			throw new Error('Attempt to insert a Configfile with an existing ID.');
+		}
+		let meter;
+		let i = 0;
+		for (meterName in this.points){
+			try {
+				meter = await Meter.getByName(`${serialID}.${i}`, conn);
+			} catch (v) {
+				// For now, new Obvius meters collect data (enabled) but do not display (not displayable).
+				// Also, the identifier is the same as the meter name for now. The longer-term plan is to read
+				// the configuration file and use information in that to set this value before meters are read
+				// so they are not created here.
+
+				//we do not have access to ipAddress here yet, that likely comes in with the log. for now, setting to 0.
+				meter = new Meter(meterName, `${serialID}.${i}`, ipAddress = 0, true, false, Meter.type.OBVIUS);
+				await meter.insert(conn);
+			}
+			i++;
 		}
 		const resp = await conn.one(sqlFile('obvius/insert_new_config.sql'), configfile);
 		this.id = resp.id;
@@ -98,6 +120,23 @@ class Configfile {
 	 */
 	makeFilename() {
 		return `${this.serialId}-mb-${this.modbusId}.ini`;
+	}
+
+	/**
+	 * parses all points in a meter into an array of form
+	 * name.pointname.units
+	 */
+	parsecontents(){
+		const config = ini.parse(this.contents); //assumes that the 'contents' is an ini file.
+ 
+		var meters = [];
+		// In array, each point is stored as: name.metername.units
+		for (x in config){
+			if (x.includes("POINT") && x.includes("NAME")){
+				meters.push(config.NAME + "." + config[x] + "." + config[x.slice(0, 7) + "UNITS"]);
+			}
+		}
+		reutrn(meters);
 	}
 }
 
