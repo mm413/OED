@@ -6,7 +6,7 @@ const database = require('../database');
 const { log } = require('../../log');
 const sqlFile = database.sqlFile;
 const ini = require("ini"); 
-const fs = require('fs'); //may be able to remove this when implemented.
+const fs = require('fs'); // TODO : may be able to remove this when implemented.
 
 
 class Configfile {
@@ -128,7 +128,10 @@ class Configfile {
 	 */
 	parsecontents(){
 		const config = ini.parse(this.contents); //assumes that the 'contents' is an ini file.
- 
+
+		//used for testing below. Placing "mb-072.ini" inside this directory.
+		// TODO : remove mb-072.ini from directory when not initially testing.
+		const config = ini.parse(fs.readFileSync('./mb-072.ini', 'utf-8'));
 		var meters = [];
 		// In array, each point is stored as: name.metername.units
 		for (x in config){
